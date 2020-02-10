@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace NetUtility
 {
-    public class SocketInfo
+    class SocketInfo
     {
         public static SocketInfo socketInfo;
         public Socket socket;
