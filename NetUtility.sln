@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetUtility", "NetUtility\Ne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetDemo", "..\NetDemo\NetDemo\NetDemo.csproj", "{AB967685-02F5-424F-B100-823C7E9C1E60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "..\NetServer\ConsoleApp1\ConsoleApp1.csproj", "{F8802D75-141E-4893-87A6-12CE2E4ACFD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AB967685-02F5-424F-B100-823C7E9C1E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB967685-02F5-424F-B100-823C7E9C1E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB967685-02F5-424F-B100-823C7E9C1E60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8802D75-141E-4893-87A6-12CE2E4ACFD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8802D75-141E-4893-87A6-12CE2E4ACFD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8802D75-141E-4893-87A6-12CE2E4ACFD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8802D75-141E-4893-87A6-12CE2E4ACFD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Net;
 using System.Xml;
-
+using System.Threading;
 namespace NetUtility
 {
     class SocketInfo
@@ -18,13 +18,17 @@ namespace NetUtility
 
         private SocketType socketType;
 
+        private FileStream logFile;
+        public StreamWriter logWriter;
         private SocketInfo()
         {
             DirectoryInfo dirInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
             byte[] ipBytes = new byte[4];
             XmlDocument xmlDoc = new XmlDocument();
             foreach (FileInfo fileInfo in dirInfo.GetFiles())
-            {               
+            {
+                if (!fileInfo.Name.Equals("net.xml")) continue;
+
                 if(fileInfo.Name.Equals("net.xml"))
                 {   
                     xmlDoc.Load(fileInfo.Name);
@@ -112,13 +116,41 @@ namespace NetUtility
                         }
                     }
                 }
-                if(port != 0 && ipBytes[0] != 0)
+                if (port != 0 && ipBytes[0] != 0)
                 {
+                    string path = Directory.GetCurrentDirectory() + "\\log.txt";
+                    logFile = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.Read);
+                    logWriter = new StreamWriter(logFile);
+                    logWriter.AutoFlush = false;
+                    WriteLog("读取配置文件完成~");
+                    WriteLog("当前配置ip为: " + ipBytes[0] + "." + ipBytes[1] + "." + ipBytes[2] + "." + ipBytes[3]);
+                    WriteLog("当前配置port为: " + port);
+                    WriteLog("当前配置的套接字类型为: " + socketType);
+                    WriteLog("当前配置的协议为: " + protocolType);
+
                     ipEndpoint = new IPEndPoint(new IPAddress(ipBytes), port);
-                    
-                    socket = new Socket(AddressFamily.InterNetwork, socketType, protocolType);                   
+
+                    socket = new Socket(AddressFamily.InterNetwork, socketType, protocolType);
+                    WriteLog("成功创建套接字对象");
                 }
                 break;
+            }
+        }
+
+        public void WriteLog(string msg,string type = "msg")
+        {
+            if(logWriter != null)
+            {       
+                logWriter.WriteLine("[ {0}h : {1}min : {2}s : {3}ms ] ::=>  [{4}] {5} \n\n",DateTime.Now.Hour,DateTime.Now.Minute,DateTime.Now.Second,DateTime.Now.Millisecond,type,msg);
+                logWriter.Flush();
+            }
+        }
+
+         ~SocketInfo()
+        {
+            if(logWriter != null)
+            {
+                logWriter.Close();                
             }
         }
 

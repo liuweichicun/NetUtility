@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Text;
 
 namespace NetUtility
 {
@@ -13,17 +14,18 @@ namespace NetUtility
                 try
                 {
                     SocketInfo.socketInfo = SocketInfo.GetSocket();
-                    Console.WriteLine("Create socket successful");
+                    SocketInfo.socketInfo.WriteLog("成功创建套接字管理类");
                 }catch(FormatException e)
                 {
-                    Console.WriteLine("配置文件异常，请查看配置文件");
+                    SocketInfo.socketInfo.WriteLog("套接字创建失败，请检查您的配置文件", "error");
                     throw e;                   
                 }catch(SocketException e)
                 {
-                    Console.WriteLine("Socket 问题");
+                    SocketInfo.socketInfo.WriteLog("套接字创建失败，请检查端口是否被占用", "error");
                     throw e;
                 }catch(Exception e)
                 {
+                    SocketInfo.socketInfo.WriteLog("发生未知错位，请重新启动", "error");
                     throw e;
                 }
                 
@@ -39,12 +41,15 @@ namespace NetUtility
                     try
                     {
                         SocketInfo.socketInfo.socket.Connect(SocketInfo.socketInfo.ipEndpoint);
+                        SocketInfo.socketInfo.WriteLog("成功连接到服务器");
                         isConnected = true;
                     }catch (SocketException e)
                     {
+                        SocketInfo.socketInfo.WriteLog("连接服务器失败，请检查目标ip和端口是否正确","error");
                         throw e;
                     }catch(Exception e)
                     {
+                        SocketInfo.socketInfo.WriteLog("在Connect时发生未知错误", "error");
                         throw e;
                     }
                     break;
@@ -59,8 +64,21 @@ namespace NetUtility
                 if(isConnected)
                 {
                     SocketInfo.socketInfo.socket.Disconnect(true);
+                    SocketInfo.socketInfo.WriteLog("成功断开连接");
                     isConnected = false;
                 }               
+        }
+
+        StringBuilder sb = new StringBuilder();
+        public string HexMsg(byte[] msg)
+        {
+            sb.Clear();
+            foreach (byte item in msg)
+            {
+
+                sb.Append(item.ToString("X"));
+            }
+            return sb.ToString();
         }
         public void SendMessage(byte[] message)
         {
@@ -70,9 +88,11 @@ namespace NetUtility
                 {
                     case System.Net.Sockets.ProtocolType.Tcp:
                         SocketInfo.socketInfo.socket.Send(message);
+                        SocketInfo.socketInfo.WriteLog("使用Tcp发送消息 :-> \"" + HexMsg(message) + "\"");
                         break;
                     case System.Net.Sockets.ProtocolType.Udp:
                         SocketInfo.socketInfo.socket.SendTo(message, SocketInfo.socketInfo.byteLength, System.Net.Sockets.SocketFlags.None, SocketInfo.socketInfo.ipEndpoint);
+                        SocketInfo.socketInfo.WriteLog("使用Udp发送消息 :-> \"" + HexMsg(message) + "\"");
                         break;
                 }
             }catch(SocketException e)
